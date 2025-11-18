@@ -1,0 +1,94 @@
+
+:root {
+  /* Bases */
+  --background: #FAF7F2;         /* fondo base cálido */
+  --foreground: #3A2E2E;         /* texto primario (sin negro puro) */
+
+  /* Superficies */
+  --card: #FFFDF8;
+  --card-foreground: #3A2E2E;
+  --popover: #FFFDF8;
+  --popover-foreground: #3A2E2E;
+
+  /* Marca / Accentos */
+  --primary: #98002E;            /* borgoña Neurolap */
+  --primary-foreground: #FFFFFF;  /* texto sobre primario */
+  --secondary: #EED3BE;          /* superficie destacada suave */
+  --secondary-foreground: #3A2E2E;
+  --muted: #EED3BE;              /* bloques suaves, notas */
+  --muted-foreground: #746F6B;   /* texto secundario */
+  --accent: #974844;             /* acento cálido (hover/bordes/iconos) */
+  --accent-foreground: #FFFFFF;  /* texto sobre acento */
+
+  /* Estados */
+  --destructive: #C24745;        /* error accesible */
+  --destructive-foreground: #FFFFFF;
+
+  /* Bordes / inputs / foco */
+  --border: #E8DACD;
+  --input: #E8DACD;
+  --ring: #974844;               /* focus ring cálido y visible */
+
+  /* Gráficos (opcional, armonizados) */
+  --chart-1: #98002E;
+  --chart-2: #5E2129;
+  --chart-3: #974844;
+  --chart-4: #CBBBA0;
+  --chart-5: #746F6B;
+
+  /* Radios y sidebar */
+  --radius: 0.625rem;
+
+  --sidebar: #FFFDF8;                    /* panel lateral claro */
+  --sidebar-foreground: #3A2E2E;
+  --sidebar-primary: #98002E;
+  --sidebar-primary-foreground: #FFFFFF;
+  --sidebar-accent: #EED3BE;
+  --sidebar-accent-foreground: #3A2E2E;
+  --sidebar-border: #E8DACD;
+  --sidebar-ring: #974844;
+}
+
+.dark {
+  /* Inversión cálida para modo oscuro */
+  --background: #1B1214;         /* muy cercano al #5E2129 pero más oscuro */
+  --foreground: #FFFDF8;
+
+  --card: #23171A;               /* superficie oscura */
+  --card-foreground: #FFFDF8;
+  --popover: #23171A;
+  --popover-foreground: #FFFDF8;
+
+  --primary: #98002E;            /* mantenemos la marca */
+  --primary-foreground: #FFFFFF;
+
+  --secondary: #3A2E2E;          /* bloques secundarios en oscuro */
+  --secondary-foreground: #FFFDF8;
+  --muted: #2A1D20;
+  --muted-foreground: #CBBBA0;
+
+  --accent: #974844;             /* acento cálido consistente */
+  --accent-foreground: #FFFFFF;
+
+  --destructive: #C24745;
+  --destructive-foreground: #FFFFFF;
+
+  --border: #3A2E2E;
+  --input: #3A2E2E;
+  --ring: #974844;
+
+  --chart-1: #E7A9B6;            /* tonos suavizados para contraste en dark */
+  --chart-2: #CBBBA0;
+  --chart-3: #B7D5CF;
+  --chart-4: #EED3BE;
+  --chart-5: #746F6B;
+
+  --sidebar: #1F1517;
+  --sidebar-foreground: #FFFDF8;
+  --sidebar-primary: #98002E;
+  --sidebar-primary-foreground: #FFFFFF;
+  --sidebar-accent: #2A1D20;
+  --sidebar-accent-foreground: #FFFDF8;
+  --sidebar-border: #3A2E2E;
+  --sidebar-ring: #974844;
+}
