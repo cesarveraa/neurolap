@@ -36,26 +36,7 @@
 | **TypeScript** | Tipado estático para asegurar la robustez del código. |
 
 
-## 📂 Estructura del Proyecto
 
-neurolap-frontend/
-├── app/                  # Rutas y lógica de páginas (App Router)
-│   ├── ayuda/            # Soporte segmentado por perfiles
-│   ├── contacto/         # Formulario de comunicación directa
-│   ├── investigacion/    # Portal de artículos científicos
-│   ├── quienes-somos/    # Misión, visión e información institucional
-│   ├── servicios/        # Catálogo de servicios profesionales
-│   ├── test-edm/         # Módulo de Evaluación Diferencial de la Memoria
-│   ├── globals.css       # Configuración de estilos globales
-│   ├── layout.tsx        # Estructura base de la aplicación
-│   └── page.tsx          # Landing page principal
-├── components/           # Componentes UI reutilizables (Navbar, Footer, Cards)
-├── lib/                  # Utilidades, constantes y funciones auxiliares
-├── public/               # Recursos estáticos (Imágenes, SVGs, PDF)
-├── styles/               # Definiciones de temas y estilos adicionales
-├── components.json       # Configuración de shadcn/ui
-├── next.config.mjs       # Configuración del framework
-└── tsconfig.json         # Configuración del compilador TypeScript
 
 🚀 Instalación y Desarrollo
 Sigue estos pasos para levantar el proyecto localmente:
