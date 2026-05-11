@@ -35,7 +35,6 @@
 | **Lucide Icons** | Iconografía minimalista y escalable. |
 | **TypeScript** | Tipado estático para asegurar la robustez del código. |
 
----
 
 ## 📂 Estructura del Proyecto
 
@@ -57,6 +56,7 @@ neurolap-frontend/
 ├── components.json       # Configuración de shadcn/ui
 ├── next.config.mjs       # Configuración del framework
 └── tsconfig.json         # Configuración del compilador TypeScript
+
 🚀 Instalación y Desarrollo
 Sigue estos pasos para levantar el proyecto localmente:
 
