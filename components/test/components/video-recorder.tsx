@@ -3,6 +3,8 @@
 
 import { useEffect, useRef, useState } from "react"
 import { Card, CardContent } from "@/components/ui/card"
+import { predictVideo } from "@/lib/edm/ai-client"
+import type { VideoSuggestion } from "@/lib/edm/ai-client"
 import { Button } from "@/components/ui/button"
 
 type RecordResult = {
@@ -11,8 +13,7 @@ type RecordResult = {
   durationMs: number
   mimeType: string
   server?: {
-    pred?: string
-    details?: any
+    details?: VideoSuggestion
     latencyMs?: number
   }
 }
@@ -22,10 +23,8 @@ interface VideoRecorderProps {
   maxDurationSec?: number
   /** Llamado al finalizar (grabación o subida). */
   onRecord: (result: RecordResult) => void
+  onAnalyzing?: () => void
 }
-
-const API_BASE_URL =
-  process.env.NEXT_PUBLIC_VIDEO_API ?? "http://localhost:8000"
 
 // Tipos que acepta el backend
 const ALLOWED_MIME = new Set([
@@ -38,13 +37,12 @@ const ALLOWED_MIME = new Set([
   "video/x-msvideo",
 ])
 
-export function VideoRecorder({ maxDurationSec, onRecord }: VideoRecorderProps) {
+export function VideoRecorder({ maxDurationSec, onRecord, onAnalyzing }: VideoRecorderProps) {
   // ======= MODO =======
   const [mode, setMode] = useState<"record" | "upload">("record")
 
   // ======= ESTADO COMÚN (resultado, UI de backend) =======
   const [uploading, setUploading] = useState(false)
-  const [pred, setPred] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
 
   // ======= GRABACIÓN =======
@@ -58,6 +56,7 @@ export function VideoRecorder({ maxDurationSec, onRecord }: VideoRecorderProps) 
   const [isRecording, setIsRecording] = useState(false)
   const [recUrl, setRecUrl] = useState<string | null>(null)
   const [elapsed, setElapsed] = useState(0)
+  const [sinMicrofono, setSinMicrofono] = useState(false)
 
   useEffect(() => {
     if (!isRecording) return
@@ -72,10 +71,20 @@ export function VideoRecorder({ maxDurationSec, onRecord }: VideoRecorderProps) 
 
     ;(async () => {
       try {
-        const s = await navigator.mediaDevices.getUserMedia({
-          video: { width: { ideal: 1280 }, height: { ideal: 720 }, facingMode: "user" },
-          audio: false,
-        })
+        // En celular, la cámara trasera (el evaluador filma al paciente); en laptop cae a la única que hay
+        const video = { width: { ideal: 1280 }, height: { ideal: 720 }, facingMode: { ideal: "environment" } }
+        // El modelo escucha los golpes de la mano en la mesa: sin cancelación de eco ni supresión de ruido,
+        // que borrarían justamente esos golpes. Si no hay micrófono, se graba solo la imagen y se avisa.
+        let s: MediaStream
+        try {
+          s = await navigator.mediaDevices.getUserMedia({
+            video,
+            audio: { echoCancellation: false, noiseSuppression: false, autoGainControl: false },
+          })
+        } catch {
+          s = await navigator.mediaDevices.getUserMedia({ video, audio: false })
+        }
+        setSinMicrofono(s.getAudioTracks().length === 0)
         if (!mounted) { s.getTracks().forEach(t => t.stop()); return }
         setStream(s)
         if (previewRef.current) {
@@ -101,8 +110,8 @@ export function VideoRecorder({ maxDurationSec, onRecord }: VideoRecorderProps) 
 
   const pickMime = () => {
     const candidates = [
-      "video/webm;codecs=vp9",
-      "video/webm;codecs=vp8",
+      "video/webm;codecs=vp9,opus",
+      "video/webm;codecs=vp8,opus",
       "video/webm",
       "video/mp4", // Safari
     ]
@@ -120,7 +129,6 @@ export function VideoRecorder({ maxDurationSec, onRecord }: VideoRecorderProps) 
     chunksRef.current = []
     setElapsed(0)
     setError(null)
-    setPred(null)
     if (recUrl) { URL.revokeObjectURL(recUrl); setRecUrl(null) }
 
     const mimeType = pickMime()
@@ -177,7 +185,6 @@ export function VideoRecorder({ maxDurationSec, onRecord }: VideoRecorderProps) 
     if (recUrl) URL.revokeObjectURL(recUrl)
     setRecUrl(null)
     setElapsed(0)
-    setPred(null)
     setError(null)
     if (replayRef.current) {
       replayRef.current.pause()
@@ -192,7 +199,6 @@ export function VideoRecorder({ maxDurationSec, onRecord }: VideoRecorderProps) 
 
   const onPickFile = (ev: React.ChangeEvent<HTMLInputElement>) => {
     setError(null)
-    setPred(null)
     const f = ev.target.files?.[0] || null
     if (!f) {
       if (fileUrl) URL.revokeObjectURL(fileUrl)
@@ -222,37 +228,27 @@ export function VideoRecorder({ maxDurationSec, onRecord }: VideoRecorderProps) 
   const sendPickedFile = async () => {
     if (!fileObj) return
     setError(null)
-    setPred(null)
     await uploadToBackend(fileObj, fileUrl || "", 0, fileObj.type || "video/webm")
   }
 
   // ======= SUBIDA COMÚN =======
   const uploadToBackend = async (file: File, url: string, durationMs: number, mime: string) => {
     try {
+      onAnalyzing?.()
       setUploading(true)
       const t0 = performance.now()
-      const fd = new FormData()
-      fd.append("file", file)
-      const resp = await fetch(`${API_BASE_URL}/predict`, { method: "POST", body: fd })
-      const json = await resp.json().catch(() => ({}))
+      const json = await predictVideo(file)
       const t1 = performance.now()
       setUploading(false)
 
-      if (!resp.ok) {
-        const msg = json?.detail || `Error HTTP ${resp.status}`
-        setError(msg)
-        onRecord({ url, file, durationMs, mimeType: mime, server: { pred: undefined, details: json, latencyMs: t1 - t0 } })
-        return
-      }
-
-      setPred(json?.pred ?? null)
       onRecord({
         url, file, durationMs, mimeType: mime,
-        server: { pred: json?.pred, details: json, latencyMs: t1 - t0 }
+        server: { details: json, latencyMs: t1 - t0 }
       })
     } catch (e: any) {
       setUploading(false)
-      setError(e?.message || "Error subiendo el video")
+      setError("IA no disponible, registre manualmente")
+      onRecord({ url, file, durationMs, mimeType: mime })
     }
   }
 
@@ -272,14 +268,14 @@ export function VideoRecorder({ maxDurationSec, onRecord }: VideoRecorderProps) 
           <Button
             type="button"
             variant={mode === "record" ? "default" : "outline"}
-            onClick={() => { setMode("record"); setError(null); setPred(null) }}
+            onClick={() => { setMode("record"); setError(null) }}
           >
             Grabar
           </Button>
           <Button
             type="button"
             variant={mode === "upload" ? "default" : "outline"}
-            onClick={() => { setMode("upload"); setError(null); setPred(null) }}
+            onClick={() => { setMode("upload"); setError(null) }}
           >
             Subir archivo
           </Button>
@@ -303,6 +299,14 @@ export function VideoRecorder({ maxDurationSec, onRecord }: VideoRecorderProps) 
                 </div>
               )}
             </div>
+
+            {sinMicrofono && (
+              <p role="alert" className="edm-notice">
+                El micrófono no está permitido: el video se grabará sin sonido y la IA no podrá escuchar los golpes en
+                la mesa, así que dirá «Revisar». Permita el micrófono en el navegador (ícono junto a la dirección) y
+                recargue la página.
+              </p>
+            )}
 
             <div className="flex gap-2">
               {!isRecording ? (
@@ -369,7 +373,6 @@ export function VideoRecorder({ maxDurationSec, onRecord }: VideoRecorderProps) 
                         if (fileUrl) URL.revokeObjectURL(fileUrl)
                         setFileUrl(null)
                         setFileObj(null)
-                        setPred(null)
                         setError(null)
                       }}
                     >
@@ -383,9 +386,11 @@ export function VideoRecorder({ maxDurationSec, onRecord }: VideoRecorderProps) 
         )}
 
         {/* Estado backend */}
-        {uploading && <p className="text-sm text-muted-foreground">Subiendo y prediciendo…</p>}
+        {uploading && !onAnalyzing && <div className="edm-ai-loading" role="status">
+          <div className="edm-skeleton" /><div className="edm-skeleton short" />
+          <p>Analizando video… puede tardar hasta un minuto</p>
+        </div>}
         {error && <p className="text-sm text-red-600">Error: {error}</p>}
-        {pred && <p className="text-sm font-medium">Predicción: <span className="text-burgundy-dark">{pred}</span></p>}
       </CardContent>
     </Card>
   )

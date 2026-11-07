@@ -59,7 +59,7 @@ export function Navbar() {
   ]
 
   const linkBase =
-    "relative inline-flex items-center px-2 py-1 text-sm lg:text-[15px] font-medium text-[#F8F8F8] transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-brand)]"
+    "relative inline-flex min-h-11 items-center px-2 py-2 text-sm lg:text-[15px] font-medium text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
   const linkHover = "hover:text-white"
   const activeUnderline =
     "after:absolute after:inset-x-2 after:-bottom-1 after:h-[2px] after:rounded-full after:bg-[var(--color-accent)] after:content-['']"
@@ -71,24 +71,16 @@ export function Navbar() {
     <nav
       role="navigation"
       aria-label="Principal"
-      className={[
-        "sticky top-0 z-50 transition-all duration-300",
-        isScrolled ? "backdrop-blur supports-[backdrop-filter]:bg-white/6" : "",
-      ].join(" ")}
-      style={{ background: "linear-gradient(180deg, rgba(0,0,0,0.35), rgba(0,0,0,0.25))" }}
+      className="sticky top-0 z-50 bg-primary text-white"
     >
       <div
-        className={[
-          "border-b transition-all duration-300",
-          isScrolled ? "border-white/10 shadow-lg shadow-black/10" : "border-white/10",
-        ].join(" ")}
-        style={{ backgroundColor: "var(--color-brand)" }}
+        className={isScrolled ? "border-b border-white/20 shadow-sm" : "border-b border-white/15"}
       >
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
           {/* Izquierda: Logo / Marca */}
           <Link
             href="/"
-            className="flex items-center gap-2 py-3 lg:py-4 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-brand)]"
+            className="flex min-h-14 items-center gap-2 py-2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
           >
             <span className="text-xl font-extrabold tracking-wide text-white lg:text-2xl">
               NEUROLAP
@@ -121,7 +113,7 @@ export function Navbar() {
                                 <li key={child.href}>
                                   <Link
                                     href={child.href}
-                                    className="flex items-center px-4 py-2 text-sm text-[#F8F8F8]/90 hover:text-white hover:bg-white/10 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)]"
+                                    className="flex min-h-11 items-center px-4 py-2 text-sm text-white hover:bg-white/10 focus-visible:outline-2 focus-visible:outline-white"
                                   >
                                     {child.label}
                                   </Link>
@@ -153,13 +145,13 @@ export function Navbar() {
                 <>
                   <Button
                     asChild
-                    className="bg-[#F8F8F8] text-[var(--color-ink-strong)] hover:bg-[#E8E8E8] font-semibold px-4 lg:px-5 h-9 lg:h-10"
+                    className="min-h-11 bg-white text-primary hover:bg-white/90 font-semibold px-4 lg:px-5"
                   >
                     <Link href="/registro">Regístrate</Link>
                   </Button>
                   <Button
                     asChild
-                    className="bg-[var(--color-ink-strong)] text-[#F8F8F8] hover:bg-[#4A1B20] font-semibold px-4 lg:px-5 h-9 lg:h-10 focus:ring-[var(--color-accent)]"
+                    className="min-h-11 border border-white/50 bg-transparent text-white hover:bg-white/10 font-semibold px-4 lg:px-5"
                   >
                     <Link href="/login">Inicio de sesión</Link>
                   </Button>
@@ -172,13 +164,13 @@ export function Navbar() {
                   <Button
                     asChild
                     variant="outline"
-                    className="bg-transparent text-white hover:bg-white/10 h-9 lg:h-10"
+                    className="min-h-11 bg-transparent text-white hover:bg-white/10"
                   >
                     <Link href="/panel">Mi panel</Link>
                   </Button>
                   <Button
                     onClick={handleLogout}
-                    className="bg-[var(--color-ink-strong)] text-[#F8F8F8] hover:bg-[#4A1B20] font-semibold px-4 lg:px-5 h-9 lg:h-10"
+                    className="min-h-11 border border-white/50 bg-transparent text-white hover:bg-white/10 font-semibold px-4 lg:px-5"
                   >
                     Cerrar sesión
                   </Button>
@@ -193,7 +185,7 @@ export function Navbar() {
               variant="ghost"
               size="icon"
               onClick={() => setIsOpen((v) => !v)}
-              className="text-white hover:bg-white/15 focus:bg-white/15 focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)]"
+              className="min-h-11 min-w-11 text-white hover:bg-white/15 focus:bg-white/15 focus-visible:outline-2 focus-visible:outline-white"
               aria-expanded={isOpen}
               aria-label={isOpen ? "Cerrar menú" : "Abrir menú"}
             >
@@ -224,7 +216,7 @@ export function Navbar() {
                           href={item.href}
                           onClick={() => setIsOpen(false)}
                           className={[
-                            "block rounded-md px-3 py-2 text-[#F8F8F8] transition-colors duration-200",
+                            "flex min-h-11 items-center rounded-md px-3 py-2 text-white",
                             "focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)]",
                             active ? "bg-white/15" : "hover:bg-white/10",
                           ].join(" ")}
@@ -232,7 +224,7 @@ export function Navbar() {
                           {item.label}
                         </Link>
                         <button
-                          className="p-2 text-[#F8F8F8]/90 hover:text-white focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)] rounded-md"
+                          className="grid min-h-11 min-w-11 place-items-center rounded-md text-white hover:bg-white/10 focus-visible:outline-2 focus-visible:outline-white"
                           aria-expanded={expanded}
                           aria-controls={`submenu-${item.href}`}
                           onClick={() => setOpenMobile((s) => ({ ...s, [item.href]: !expanded }))}
@@ -253,7 +245,7 @@ export function Navbar() {
                               <Link
                                 href={child.href}
                                 onClick={() => setIsOpen(false)}
-                                className="block rounded-md px-3 py-2 text-sm text-[#F8F8F8]/90 hover:text-white hover:bg-white/10 transition-colors"
+                                className="flex min-h-11 items-center rounded-md px-3 py-2 text-sm text-white hover:bg-white/10"
                               >
                                 {child.label}
                               </Link>
@@ -271,7 +263,7 @@ export function Navbar() {
                       href={item.href}
                       onClick={() => setIsOpen(false)}
                       className={[
-                        "block rounded-md px-3 py-2 text-[#F8F8F8] transition-colors duration-200",
+                        "flex min-h-11 items-center rounded-md px-3 py-2 text-white",
                         "focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)]",
                         active ? "bg-white/15" : "hover:bg-white/10",
                       ].join(" ")}
@@ -289,13 +281,13 @@ export function Navbar() {
                 <div className="grid grid-cols-2 gap-2">
                   <Button
                     asChild
-                    className="w-full bg-[#F8F8F8] text-[var(--color-ink-strong)] hover:bg-[#E8E8E8] font-semibold h-10"
+                    className="min-h-11 w-full bg-white text-primary hover:bg-white/90 font-semibold"
                   >
                     <Link href="/registro" onClick={() => setIsOpen(false)}>Regístrate</Link>
                   </Button>
                   <Button
                     asChild
-                    className="w-full bg-[var(--color-ink-strong)] text-[#F8F8F8] hover:bg-[#4A1B20] font-semibold h-10"
+                    className="min-h-11 w-full border border-white/50 bg-transparent text-white hover:bg-white/10 font-semibold"
                   >
                     <Link href="/login" onClick={() => setIsOpen(false)}>Inicio de sesión</Link>
                   </Button>
@@ -307,13 +299,13 @@ export function Navbar() {
                   <Button
                     asChild
                     variant="outline"
-                    className="w-full bg-transparent text-white hover:bg-white/10 h-10"
+                    className="min-h-11 w-full bg-transparent text-white hover:bg-white/10"
                   >
                     <Link href="/panel" onClick={() => setIsOpen(false)}>Mi panel</Link>
                   </Button>
                   <Button
                     onClick={handleLogout}
-                    className="w-full bg-[var(--color-ink-strong)] text-[#F8F8F8] hover:bg-[#4A1B20] font-semibold h-10"
+                    className="min-h-11 w-full border border-white/50 bg-transparent text-white hover:bg-white/10 font-semibold"
                   >
                     Cerrar sesión
                   </Button>
@@ -324,8 +316,6 @@ export function Navbar() {
         </div>
       </div>
 
-      {/* Separador sutil */}
-      <div className={isScrolled ? "h-2" : "h-3"} />
     </nav>
   )
 }

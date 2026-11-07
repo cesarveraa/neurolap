@@ -1,67 +1,62 @@
-# 🧠 Neurolap – Portal de Investigación y Apoyo en Neuropsicología del Envejecimiento
+# Neurolap · Portal de neuropsicología del envejecimiento
 
-![Next.js](https://img.shields.io/badge/Next.js-14-black?style=for-the-badge&logo=next.js)
-![React](https://img.shields.io/badge/React-18-blue?style=for-the-badge&logo=react)
-![TailwindCSS](https://img.shields.io/badge/TailwindCSS-3.4-38B2AC?style=for-the-badge&logo=tailwind-css)
-![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?style=for-the-badge&logo=typescript)
-![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)
+Plataforma web hecha en Bolivia para la **detección temprana de alteraciones de la memoria** en Personas Adultas Mayores
+(PAM): la **Evaluación Diferencial de la Memoria (EDM 2023)** en formato digital, con IA de apoyo, y recursos para
+familias, cuidadores y profesionales. La IA sugiere; el resultado lo decide siempre el evaluador.
 
-**Neurolap** es una plataforma web integral diseñada para la **neuropsicología del envejecimiento**. Su objetivo principal es facilitar la detección temprana del deterioro cognitivo y centralizar recursos científicos para Personas Adultas Mayores (PAM), sus familias, cuidadores y profesionales de la salud.
+## Funciones
 
----
+**Evaluación EDM 2023** (`/test-edm`)
+- Asistente paso a paso con consentimiento, datos del paciente (edad calculada, idiomas de Bolivia, escolaridad, etc.),
+  MMSE modificado y cuestionario de reserva cognitiva.
+- Registro de cada ítem y **hoja oficial de resultados** con los colores del EDM, más un **informe en PDF**.
+- **IA de apoyo** (API en [Nuerolap/NEUROLAP_Vision_Artificial](https://github.com/Nuerolap/NEUROLAP_Vision_Artificial)):
+  - video de puño–filo–palma (ítem 27);
+  - foto de la figura de Rey (ítems 11 y 13);
+  - fluidez verbal (ítem 18), con conteo y análisis cualitativo: agrupamientos, cambios y ritmo cada 15 s.
+- **Guías de captura animadas** para la foto, el video y el audio, y un aviso para repetir la captura si sale mal tomada.
+- **Escalas complementarias** opcionales, que no forman parte del EDM 2023:
+  - informante (AD8, antecedentes familiares y cuidador);
+  - GDS-15;
+  - Lawton y Brody.
+- El borrador se guarda **solo en el navegador** (`localStorage`). No hay servidor de datos todavía: el registro y el inicio
+  de sesión están marcados como "Próximamente".
 
-## 🌟 Características Principales
+**Secciones informativas**: memoria, deterioro cognitivo, reserva cognitiva, envejecimiento normal y patológico, calidad
+de vida de las PAM y servicios (evaluación, estimulación y capacitación de cuidadores).
 
-### 📚 Secciones Informativas
-* **Investigación Científica:** Repositorio de avances y estudios en neuropsicología.
-* **Envejecimiento:** Diferenciación entre procesos normales y patológicos.
-* **Reserva Cognitiva:** Información sobre deterioro cognitivo y factores protectores.
-* **Calidad de Vida:** Recursos para el bienestar integral en la tercera edad.
-* **Procesos de Memoria:** Análisis de tipos de memoria y sus cambios con la edad.
+## Stack
 
-### 🔬 Herramientas de Evaluación
-* **EDM (Evaluación Diferencial de la Memoria):** Implementación digital de protocolos de evaluación para una detección precisa.
+Next.js 14 (App Router) · React 18 · TypeScript · Tailwind CSS · shadcn/ui · Lucide · jsPDF + html2canvas.
+Letra Atkinson Hyperlegible, pensada para baja visión.
 
----
+## Desarrollo
 
-## 🛠️ Stack Tecnológico
-
-| Tecnología | Propósito |
-| :--- | :--- |
-| **Next.js 14** | Framework React con App Router y soporte para SSR/ISR. |
-| **React** | Biblioteca principal para la interfaz de usuario. |
-| **TailwindCSS** | Estilizado basado en utilidades para un diseño responsivo. |
-| **shadcn/ui** | Set de componentes accesibles y con diseño moderno. |
-| **Lucide Icons** | Iconografía minimalista y escalable. |
-| **TypeScript** | Tipado estático para asegurar la robustez del código. |
-
-
-
-
-🚀 Instalación y Desarrollo
-Sigue estos pasos para levantar el proyecto localmente:
-
-Clonar el repositorio:
-
-Bash
-git clone [https://github.com/tuusuario/neurolap-portal.git](https://github.com/tuusuario/neurolap-portal.git)
-cd neurolap-portal
-Instalar dependencias:
-
-Bash
+```bash
 npm install
-# o si usas pnpm
-pnpm install
-Ejecutar servidor de desarrollo:
+npm run dev                                   # http://localhost:3000
+NEXT_PUBLIC_AI_API=http://localhost:8000 npm run dev   # URL de la API de IA (por defecto localhost:8000)
+node --test $(find lib -name '*.test.ts')     # pruebas de puntajes (EDM, MMSE, AD8, GDS-15, Lawton, fluidez)
+npm run build && npm run start                # producción
+```
 
-Bash
-npm run dev
-La aplicación estará disponible en http://localhost:3000.
+## Estructura
 
-Construir para producción:
+```
+app/                  páginas (inicio, servicios, investigación, test-edm, contacto…)
+components/test/      asistente EDM, controles de registro e informe
+components/edm/       tarjetas de IA, guías animadas, escalas complementarias, hoja oficial
+lib/edm/              ítems, puntajes y cliente de la API de IA
+lib/{mmse,informante,gds15,lawton}/   puntaje de cada escala, con pruebas
+public/edm/           láminas de estímulo del EDM
+```
 
-Bash
-npm run build
-npm run start
-📄 Licencia
-Este proyecto se distribuye bajo la Licencia MIT. Siéntete libre de usarlo, modificarlo y distribuirlo, acreditando siempre la autoría original.
+## Despliegue
+
+Imagen Docker de Next.js, servida junto a la API detrás de Caddy (`/ia/*` va a la API y el resto a la web) en el
+servidor del equipo.
+
+## Licencia
+
+El código se distribuye bajo la licencia MIT. Las láminas e ítems del EDM 2023 pertenecen a sus autores, y el MMSE y el
+AD8 tienen sus propios derechos: no están cubiertos por la licencia MIT.

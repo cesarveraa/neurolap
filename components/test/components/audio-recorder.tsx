@@ -34,7 +34,7 @@ function pickAudioMime() {
 function SingleAudioRecorder({
   label,
   maxDurationSec,
-  acceptUploads = ".wav,.webm,.ogg,.m4a,.mp3",
+  acceptUploads = "audio/*,.m4a,.aac,.opus,.amr,.3gp,.ogg,.webm,.wav,.mp3",
   onChange,
 }: SingleAudioRecorderProps) {
   // refs para evitar renders innecesarios
@@ -200,6 +200,7 @@ function SingleAudioRecorder({
 interface AudioRecorderPairProps {
   maxDurationSec?: number
   onAnswer: (value: { animals?: AudioResult | null; letterF?: AudioResult | null }) => void
+  resetCategory?: { category: "animals" | "letterF"; id: number }
 }
 
 /**
@@ -208,8 +209,10 @@ interface AudioRecorderPairProps {
  * - "Palabras que empiezan con F"
  * Evita loops manteniendo onAnswer en un ref y sólo notificando cuando hay cambios reales.
  */
-export function AudioRecorderPair({ maxDurationSec, onAnswer }: AudioRecorderPairProps) {
+export function AudioRecorderPair({ maxDurationSec, onAnswer, resetCategory }: AudioRecorderPairProps) {
   const answerRef = useRef<{ animals?: AudioResult | null; letterF?: AudioResult | null }>({})
+  const resetIdRef = useRef(resetCategory?.id ?? 0)
+  const [keys, setKeys] = useState({ animals: 0, letterF: 0 })
 
   // mantener onAnswer estable
   const onAnswerRef = useRef(onAnswer)
@@ -221,19 +224,29 @@ export function AudioRecorderPair({ maxDurationSec, onAnswer }: AudioRecorderPai
     onAnswerRef.current(answerRef.current)
   }
 
+  useEffect(() => {
+    if (!resetCategory || resetCategory.id === resetIdRef.current) return
+    resetIdRef.current = resetCategory.id
+    answerRef.current = { ...answerRef.current, [resetCategory.category]: null }
+    onAnswerRef.current(answerRef.current)
+    setKeys((old) => ({ ...old, [resetCategory.category]: old[resetCategory.category] + 1 }))
+  }, [resetCategory])
+
   return (
     <Card>
       <CardContent className="p-4 space-y-6">
         <SingleAudioRecorder
+          key={keys.animals}
           label="ANIMALES"
           maxDurationSec={maxDurationSec ?? 60}
-          acceptUploads=".wav,.webm,.ogg,.m4a,.mp3"
+          acceptUploads="audio/*,.m4a,.aac,.opus,.amr,.3gp,.ogg,.webm,.wav,.mp3"
           onChange={(res) => update("animals", res)}
         />
         <SingleAudioRecorder
+          key={keys.letterF}
           label='PALABRAS QUE EMPIEZAN CON "F"'
           maxDurationSec={maxDurationSec ?? 60}
-          acceptUploads=".wav,.webm,.ogg,.m4a,.mp3"
+          acceptUploads="audio/*,.m4a,.aac,.opus,.amr,.3gp,.ogg,.webm,.wav,.mp3"
           onChange={(res) => update("letterF", res)}
         />
       </CardContent>

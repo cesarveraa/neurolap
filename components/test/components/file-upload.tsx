@@ -5,6 +5,7 @@ import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Upload, X, Check, Loader2, AlertCircle, Brain } from "lucide-react"
+import { predictDrawing } from "@/lib/edm/ai-client"
 
 interface FileUploadProps {
   accept?: string
@@ -19,7 +20,7 @@ interface AnalysisResult {
   technicalDetails: string
 }
 
-const API_BASE_URL ="https://imagenes-eight.vercel.app"
+
 
 export function FileUpload({
   accept = "image/*,.heic,.heif",
@@ -53,33 +54,12 @@ export function FileUpload({
     setAnalysis(null)
 
     try {
-      const form = new FormData()
-      form.append("file", file, file.name)
-
-      const res = await fetch(`${API_BASE_URL}/analyze-memory-test`, {
-        method: "POST",
-        body: form,
-      })
-
-      if (!res.ok) {
-        let detail = ""
-        try {
-          const data = await res.json()
-          detail = data?.detail || JSON.stringify(data)
-        } catch {
-          /* noop */
-        }
-        throw new Error(detail || `Error HTTP ${res.status}`)
-      }
-
-      const data = await res.json()
-      
-      // Parsear la respuesta de Gemini
+      const data = await predictDrawing(file, "copia")
       const analysisResult: AnalysisResult = {
-        similarityScore: data.similarity_score || 0,
-        verdict: data.verdict || "No se pudo determinar",
-        psychologicalAnalysis: data.psychological_analysis || "",
-        technicalDetails: data.technical_details || ""
+        similarityScore: 0,
+        verdict: data.color,
+        psychologicalAnalysis: data.requires_review ? "Revise manualmente" : "",
+        technicalDetails: `Modelo: ${data.model_version}`,
       }
 
       setAnalysis(analysisResult)

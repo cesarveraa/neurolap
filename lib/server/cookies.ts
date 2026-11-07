@@ -16,7 +16,7 @@ export function setAuthCookie(res: NextResponse, token: string) {
   res.cookies.set(COOKIE_NAME, token, {
     httpOnly: true,
     secure: SECURE,
-    sameSite: SAME_SITE,
+    sameSite: SAME_SITE.toLowerCase() as "lax" | "strict" | "none",
     path: "/",
     maxAge: MAX_AGE_DAYS * 24 * 60 * 60, // segundos
     ...(DOMAIN ? { domain: DOMAIN } : {}),
@@ -30,7 +30,7 @@ export function clearAuthCookie(res: NextResponse) {
   res.cookies.set(COOKIE_NAME, "", {
     httpOnly: true,
     secure: SECURE,
-    sameSite: SAME_SITE,
+    sameSite: SAME_SITE.toLowerCase() as "lax" | "strict" | "none",
     path: "/",
     maxAge: 0,
     ...(DOMAIN ? { domain: DOMAIN } : {}),

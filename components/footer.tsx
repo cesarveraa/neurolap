@@ -27,7 +27,7 @@ export function Footer() {
   ]
 
   return (
-    <footer className="bg-chart-2 text-primary-foreground">
+    <footer className="bg-[var(--footer-bg)] text-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* Navigation */}
@@ -38,7 +38,7 @@ export function Footer() {
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="text-primary-foreground/80 hover:text-primary-foreground transition-colors"
+                    className="inline-flex min-h-11 items-center text-white/90 hover:text-white focus-visible:outline-2 focus-visible:outline-white"
                   >
                     {link.label}
                   </Link>
@@ -55,7 +55,7 @@ export function Footer() {
                 <li key={service.href}>
                   <Link
                     href={service.href}
-                    className="text-primary-foreground/80 hover:text-primary-foreground transition-colors text-sm"
+                    className="inline-flex min-h-11 items-center text-white/90 hover:text-white focus-visible:outline-2 focus-visible:outline-white"
                   >
                     {service.label}
                   </Link>
@@ -72,7 +72,7 @@ export function Footer() {
                 <li key={research.href}>
                   <Link
                     href={research.href}
-                    className="text-primary-foreground/80 hover:text-primary-foreground transition-colors text-sm"
+                    className="inline-flex min-h-11 items-center text-white/90 hover:text-white focus-visible:outline-2 focus-visible:outline-white"
                   >
                     {research.label}
                   </Link>
@@ -89,7 +89,7 @@ export function Footer() {
                 <Mail className="h-4 w-4" />
                 <a
                   href="mailto:neurolap.bo@gmail.com"
-                  className="text-primary-foreground/80 hover:text-primary-foreground transition-colors text-sm"
+                  className="inline-flex min-h-11 items-center text-white/90 hover:text-white focus-visible:outline-2 focus-visible:outline-white"
                 >
                   neurolap.bo@gmail.com
                 </a>
@@ -98,26 +98,26 @@ export function Footer() {
                 <Phone className="h-4 w-4" />
                 <a
                   href="tel:+59176325490"
-                  className="text-primary-foreground/80 hover:text-primary-foreground transition-colors text-sm"
+                  className="inline-flex min-h-11 items-center text-white/90 hover:text-white focus-visible:outline-2 focus-visible:outline-white"
                 >
                   +591 76325490
                 </a>
               </div>
               <div className="flex space-x-4 pt-2">
-                <a
-                  href="#"
-                  className="text-primary-foreground/80 hover:text-primary-foreground transition-colors"
-                  aria-label="Instagram"
+                <span
+                  className="text-primary-foreground/50 cursor-not-allowed"
+                  aria-label="Instagram: próximamente"
+                  title="Instagram: próximamente"
                 >
                   <Instagram className="h-5 w-5" />
-                </a>
-                <a
-                  href="#"
-                  className="text-primary-foreground/80 hover:text-primary-foreground transition-colors"
-                  aria-label="Facebook"
+                </span>
+                <span
+                  className="text-primary-foreground/50 cursor-not-allowed"
+                  aria-label="Facebook: próximamente"
+                  title="Facebook: próximamente"
                 >
                   <Facebook className="h-5 w-5" />
-                </a>
+                </span>
               </div>
             </div>
           </div>
@@ -125,17 +125,11 @@ export function Footer() {
 
         {/* Bottom section */}
         <div className="border-t border-primary-foreground/20 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
-          <p className="text-primary-foreground/80 text-sm">© 2024 NEUROLAP. Todos los derechos reservados.</p>
+          <p className="text-sm text-white/90">© 2024 NEUROLAP. Todos los derechos reservados. Hecho en Bolivia.</p>
           <div className="flex space-x-6 mt-4 md:mt-0">
             <Link
-              href="/terminos"
-              className="text-primary-foreground/80 hover:text-primary-foreground transition-colors text-sm"
-            >
-              Términos
-            </Link>
-            <Link
               href="/privacidad"
-              className="text-primary-foreground/80 hover:text-primary-foreground transition-colors text-sm"
+              className="inline-flex min-h-11 items-center text-sm text-white/90 hover:text-white focus-visible:outline-2 focus-visible:outline-white"
             >
               Política de Privacidad
             </Link>

@@ -1,5 +1,4 @@
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import type { LucideIcon } from "lucide-react"
 import Link from "next/link"
 
@@ -7,58 +6,30 @@ interface ServiceCardProps {
   title: string
   icon: LucideIcon
   description: string
-  primaryCta: {
-    label: string
-    href: string
-  }
-  secondaryCta?: {
-    label: string
-    href: string
-  }
+  primaryCta: { label: string; href: string }
+  secondaryCta?: { label: string; href: string }
   elevated?: boolean
   accentColor?: string
 }
 
-export function ServiceCard({
-  title,
-  icon: Icon,
-  description,
-  primaryCta,
-  secondaryCta,
-  elevated = false,
-  accentColor,
-}: ServiceCardProps) {
+export function ServiceCard({ title, icon: Icon, description, primaryCta, secondaryCta }: ServiceCardProps) {
   return (
-    <Card
-      className={`h-full transition-all duration-300 hover:shadow-lg hover:-translate-y-1 ${
-        elevated ? "shadow-lg border-accent/50" : "shadow-sm"
-      } bg-card border-border`}
-    >
-      <CardHeader className="text-center pb-4">
-        <div className="mx-auto mb-4 p-3 rounded-full bg-secondary/20 w-fit">
-          <Icon className={`h-8 w-8 ${accentColor ? `text-[${accentColor}]` : "text-accent"}`} />
-        </div>
-        <CardTitle className="text-xl font-semibold text-card-foreground text-balance">{title}</CardTitle>
-      </CardHeader>
-      <CardContent className="pb-6">
-        <CardDescription className="text-muted-foreground text-center leading-relaxed text-pretty">
-          {description}
-        </CardDescription>
-      </CardContent>
-      <CardFooter className="flex flex-col gap-3 pt-0">
-        <Button asChild className="w-full bg-accent hover:bg-accent/90 text-accent-foreground font-medium">
-          <Link href={primaryCta.href}>{primaryCta.label}</Link>
-        </Button>
-        {secondaryCta && (
-          <Button
-            asChild
-            variant="outline"
-            className="w-full border-primary text-primary hover:bg-primary hover:text-primary-foreground bg-transparent"
-          >
-            <Link href={secondaryCta.href}>{secondaryCta.label}</Link>
+    <article className="grid gap-3 border-b border-border py-6 first:pt-0 sm:grid-cols-[3rem_1fr] sm:gap-5">
+      <Icon aria-hidden="true" className="h-7 w-7 text-primary sm:mt-1" strokeWidth={1.7} />
+      <div>
+        <h3 className="mb-2 text-[22px] font-semibold text-foreground">{title}</h3>
+        <p className="mb-3 max-w-[62ch] text-muted-foreground">{description}</p>
+        <div className="flex flex-wrap gap-2">
+          <Button asChild variant="outline" className="min-h-11 border-primary bg-transparent text-primary hover:bg-primary/10">
+            <Link href={primaryCta.href}>{primaryCta.label}</Link>
           </Button>
-        )}
-      </CardFooter>
-    </Card>
+          {secondaryCta && (
+            <Button asChild className="min-h-11 bg-primary text-primary-foreground hover:bg-primary/90">
+              <Link href={secondaryCta.href}>{secondaryCta.label}</Link>
+            </Button>
+          )}
+        </div>
+      </div>
+    </article>
   )
 }

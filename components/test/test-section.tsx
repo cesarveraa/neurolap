@@ -271,13 +271,8 @@ export function TestSection({ section, currentItem, onResponse }: TestSectionPro
         return (
           <MatrixSelect
             imageSrc="/anexo1-response-edm.png"
-            targetSrc="/anexo1-edm.png"
-            maxSelect={15}
+            targetSrc="/edm/n1-estimulo.png"
             onSelect={(ids) => handleResponse(ids)}
-            calibration={{
-              enabled: true, // activa calibración
-              initial: { rows: 15, cols: 16, x0: 0, y0: 0, x1: 1, y1: 1 } // valores iniciales aproximados
-            }}
           />
 
         )

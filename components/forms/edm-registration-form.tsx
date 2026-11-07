@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { CIUDADES, ESCOLARIDAD, ESTADOS_CIVILES, PROFESIONES } from "@/lib/edm/paciente"
 import { Textarea } from "@/components/ui/textarea"
 
 type FormState = {
@@ -148,7 +149,8 @@ export default function EdmRegistrationForm() {
         {/* Ciudad natal / CI */}
         <div className="animate-fadeInUp">
           <label className="block text-sm font-medium mb-1">Ciudad Natal</label>
-          <Input ref={refs.ciudad} value={form.ciudad} onChange={onChange("ciudad")} placeholder="Ciudad Natal" className={fieldClass("ciudad")} />
+          <Input ref={refs.ciudad} value={form.ciudad} onChange={onChange("ciudad")} placeholder="Ciudad Natal" list="registro-ciudades" className={fieldClass("ciudad")} />
+          <datalist id="registro-ciudades">{CIUDADES.map((x) => <option key={x} value={x} />)}<option value="Otro país" /></datalist>
           {errors.ciudad && <p className="text-destructive text-xs mt-1">{errors.ciudad}</p>}
         </div>
         <div className="animate-fadeInUp delay-150">
@@ -172,11 +174,7 @@ export default function EdmRegistrationForm() {
             className={`w-full rounded-md border bg-background px-3 py-2 text-sm ${fieldClass("estadoCivil")}`}
           >
             <option value="">Selecciona…</option>
-            <option value="Soltero/a">Soltero/a</option>
-            <option value="Casado/a">Casado/a</option>
-            <option value="Unión libre">Unión libre</option>
-            <option value="Divorciado/a">Divorciado/a</option>
-            <option value="Viudo/a">Viudo/a</option>
+            {ESTADOS_CIVILES.map((x) => <option key={x} value={x}>{x}</option>)}
           </select>
           {errors.estadoCivil && <p className="text-destructive text-xs mt-1">{errors.estadoCivil}</p>}
         </div>
@@ -191,17 +189,14 @@ export default function EdmRegistrationForm() {
             className={`w-full rounded-md border bg-background px-3 py-2 text-sm ${fieldClass("gradoInstruccion")}`}
           >
             <option value="">Selecciona…</option>
-            <option value="Primaria">Primaria</option>
-            <option value="Secundaria">Secundaria</option>
-            <option value="Técnica">Técnica</option>
-            <option value="Universitaria">Universitaria</option>
-            <option value="Postgrado">Postgrado</option>
+            {ESCOLARIDAD.map((x) => <option key={x} value={x}>{x}</option>)}
           </select>
           {errors.gradoInstruccion && <p className="text-destructive text-xs mt-1">{errors.gradoInstruccion}</p>}
         </div>
         <div className="animate-fadeInUp delay-150">
           <label className="block text-sm font-medium mb-1">Profesión/Ocupación</label>
-          <Input ref={refs.profesion} value={form.profesion} onChange={onChange("profesion")} placeholder="Profesión u ocupación" className={fieldClass("profesion")} />
+          <Input ref={refs.profesion} value={form.profesion} onChange={onChange("profesion")} placeholder="Profesión u ocupación" list="registro-profesiones" className={fieldClass("profesion")} />
+          <datalist id="registro-profesiones">{PROFESIONES.map((x) => <option key={x} value={x} />)}</datalist>
           {errors.profesion && <p className="text-destructive text-xs mt-1">{errors.profesion}</p>}
         </div>
 
@@ -235,7 +230,7 @@ export default function EdmRegistrationForm() {
       <div className="flex items-center gap-2 animate-fadeInUp">
         <input id="acepta" ref={refs.acepta} type="checkbox" checked={form.acepta} onChange={onChange("acepta")} />
         <label htmlFor="acepta" className="text-sm">
-          Estoy de acuerdo con los <a href="/terminos" className="underline">Términos</a> y <a href="/privacidad" className="underline">Política de privacidad</a>
+          Estoy de acuerdo con la <a href="/privacidad" className="underline">Política de privacidad</a>
         </label>
       </div>
       {errors.acepta && <p className="text-destructive text-xs -mt-2 animate-shake-x">{errors.acepta}</p>}

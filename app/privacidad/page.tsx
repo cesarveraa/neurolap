@@ -9,15 +9,21 @@ export default function PrivacidadPage() {
   const [open, setOpen] = useState(true)
   const router = useRouter()
   const dialogRef = useRef<HTMLDivElement>(null)
+  // Cerrar = volver a donde estaba (o al inicio); antes dejaba la página en blanco
+  const salir = useCallback(() => {
+    setOpen(false)
+    if (window.history.length > 1) router.back()
+    else router.push("/")
+  }, [router])
 
   // Cerrar con ESC
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setOpen(false)
+      if (e.key === "Escape") salir()
     }
     document.addEventListener("keydown", onKey)
     return () => document.removeEventListener("keydown", onKey)
-  }, [])
+  }, [salir])
 
   // Scroll lock del body mientras está abierto
   useEffect(() => {
@@ -30,9 +36,8 @@ export default function PrivacidadPage() {
 
   // Cerrar al hacer click fuera
   const onBackdropClick = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
-    if (e.target === e.currentTarget) setOpen(false)
-        router.push("/registro")
-  }, [])
+    if (e.target === e.currentTarget) salir()
+  }, [salir])
 
   const handleAccept = () => {
     setOpen(false)
@@ -113,7 +118,7 @@ export default function PrivacidadPage() {
 
         {/* Footer */}
         <div className="px-6 pb-6 flex justify-end gap-3">
-          <Button variant="ghost" onClick={() => setOpen(false)}>
+          <Button variant="ghost" onClick={salir}>
             Cerrar
           </Button>
           <Button onClick={handleAccept} className="btn-dark">

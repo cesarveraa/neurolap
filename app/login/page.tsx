@@ -1,4 +1,5 @@
 "use client"
+import Link from "next/link"
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
@@ -64,10 +65,22 @@ export default function LoginPage() {
             </div>
 
             {/* tarjeta del form */}
+            <div id="aviso-proximamente" role="status" className="mb-6 rounded-xl border border-[var(--color-accent)] bg-[var(--color-accent)]/10 p-4 text-sm animate-fadeInUp">
+              <p className="font-semibold text-primary">Próximamente</p>
+              <p className="mt-1 text-muted-foreground">
+                Las cuentas de usuario todavía no están habilitadas. Mientras tanto, puede realizar la Evaluación
+                Diferencial de la Memoria sin crear una cuenta.
+              </p>
+              <Link href="/test-edm" className="mt-3 inline-block font-semibold text-primary underline">
+                Ir a la evaluación EDM
+              </Link>
+            </div>
+
             <form
               onSubmit={onSubmit}
               className="rounded-xl border border-border bg-background/70 backdrop-blur p-6 md:p-7 shadow-xl animate-fadeInUp card-lift"
             >
+              <fieldset disabled aria-describedby="aviso-proximamente" className="opacity-60">
               {/* email */}
               <div className="mb-4">
                 <Label htmlFor="email" className="mb-1 block text-sm font-medium">
@@ -167,6 +180,7 @@ export default function LoginPage() {
                   Recuperar acceso
                 </button>
               </div>
+            </fieldset>
             </form>
           </div>
         </section>
